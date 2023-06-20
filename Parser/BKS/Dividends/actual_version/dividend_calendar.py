@@ -55,7 +55,7 @@ def get_list_this_year():
         stocks_with_div[company_name] = {'dividend_value': dividend_value, 'dividend_percent': dividend_percent,
                                              'last_buy_day': last_buy_day, 'closing_date': closing_date,
                                              'price_one_stock': price_one_stock, 'lot_price': lot_price}
-    return stocks_with_div
+    return sorted(stocks_with_div.items(), key=lambda x: x[1]['dividend_percent'], reverse=True)
 
 
 def main():
