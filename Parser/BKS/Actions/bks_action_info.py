@@ -1,15 +1,8 @@
-from typing import Tuple
-
 import requests
 import json
 import csv
-from datetime import date
-
-my_equitys = ('VKCO', 'ALRS', 'BSPB', 'VTBR', 'KRSBP', 'CBOM', 'MAGN', 'MTSS', 'MTLR', 'MOEX', 'NLMK', 'NVTK',
-              'OGKB', 'KZOSP', 'POLY', 'RUAL', 'RTKM', 'HYDR', 'SBER', 'CHMF', 'LSRG')
-
-
-# В переменной my_equitys хранится список акци по которым необходимо собирать накопительную статистику
+from datetime import date, timedelta
+from My_equitys import my_equitys # впеременной my_equitys хранится список акци по которым необходимо собирать накопительную статистику
 
 
 def get_json():
@@ -68,11 +61,7 @@ def get_result_files(incoming_data):
         print('csv file create')
 
 
-def main():
+if __name__ == '__main__':
     get_json()
     result_list = pars_json(my_equitys)
     get_result_files(result_list)
-
-
-if __name__ == '__main__':
-    main()
