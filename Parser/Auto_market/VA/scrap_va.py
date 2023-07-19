@@ -1,15 +1,21 @@
 import requests
 import json
 
+
+def get_content(par: dict, head: dict, cook, brand: str, p_number: str) -> object:
+    response = req.get('https://www.va36.ru/api/v2/client/fast-search/',
+                       params=par, headers=head, cookies=cook)
+    with open(f"{brand}_{p_number}_1.json", 'w', encoding='utf-8') as f:
+        json.dump(response.json(), f, indent=4, ensure_ascii=True)
+    print(response.json())
+
+
 part_number = 'R3007'
+urls = {'base_search_url': 'https://www.va36.ru/search/sphinx/',
+       'reserve_search_url': 'https://www.va36.ru/api/v2/client/fast-search/'}
 
-start_params = {
-    'term': part_number,
-}
-
-ses = requests.Session()
-base_url = ses.get('https://www.va36.ru')
-cookies = ses.cookies
+params = {'start_params_base': {'term': part_number},
+          'start_params_reserve': {'article': part_number, 'withAnalogs': '1'}}
 
 headers = {
     'authority': 'www.va36.ru',
@@ -26,26 +32,22 @@ headers = {
     'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36',
     'warlng': 'undefined',
 }
-data_0 = ses.get('https://www.va36.ru/search/sphinx/', params=start_params, headers=headers, cookies=ses.cookies)
-data = ses.get('https://www.va36.ru/search/sphinx/', params=start_params, headers=headers, cookies=ses.cookies)
 
-brand = data.json()[0].get('prd_name')
+req = requests.Session()
+cookies = req.get('https://www.va36.ru', headers=headers).cookies
+
+
+data_0 = req.get(url=urls['reserve_search_url'], params=params['start_params_reserve'],
+                 headers=headers, cookies=cookies)
+data = req.get(url=urls['reserve_search_url'], params=params['start_params_reserve'],
+               headers=headers, cookies=cookies)
+
+brand = data.json().get('data').get('brands')[0]['name']
 print(brand)
 
-params = {
-    'article': part_number,
-    'brand': brand,
-    'withAnalogs': '1',
-}
+params_for_total = {'article': part_number, 'brand': brand, 'withAnalogs': '1',}
 
-
-def get_content(par: dict, headers: dict, cook) -> object:
-    response = ses.get('https://www.va36.ru/api/v2/client/fast-search/',
-                       params=par, headers=headers, cookies=cook)
-    with open(f"{brand}_{part_number}.json", 'w', encoding='utf-8') as f:
-        json.dump(response.json(), f, indent=4, ensure_ascii=True)
-    print(response.json())
 
 
 if __name__ == '__main__':
-    get_content(params, headers, cookies)
+    get_content(params_for_total, headers, cookies, brand, part_number)
