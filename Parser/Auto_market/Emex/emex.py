@@ -61,9 +61,10 @@ match result:
         pprint(get_original_parts(original))
         pprint(get_analog_or_replacement_parts(analog))
     case _:
-        part_vars = [{'make': i['make'], 'number': i['num']} for i in result['makes']['list']]
+        part_vars: list = [{'make': i['make'], 'number': i['num']} for i in result['makes']['list']]
         alter_params_search['make'], alter_params_search['detailNum'] = part_vars[0].values()
-        alter_result = requests.get(url=alter_search_url, headers=headers_search, params=alter_params_search).json()
+        alter_result: object = requests.get(url=alter_search_url, headers=headers_search,
+                                            params=alter_params_search).json()
         match alter_result['searchResult']:
             case {'originals': original, 'analogs': analog, 'replacements': replacement}:
                 pprint(get_original_parts(original))

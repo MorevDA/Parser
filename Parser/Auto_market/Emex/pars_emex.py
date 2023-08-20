@@ -1,6 +1,8 @@
 import json
 from pprint import pprint
 
+sorting_options = {0: 'Срок доставки, дней', 1: 'Цена, руб.'}
+
 
 def get_analog_or_replacement_parts(parts_dict: dict, sorting_option='Цена, руб.') -> dict:
     """ Функция для получения информации по аналогам запчасти, как того же производителя, так и других
@@ -44,5 +46,4 @@ if __name__ == "__main__":
     with open('emex_4475005002_1', 'r', encoding='utf-8') as file:
         search_result = json.load(file)['searchResult']
     print(search_result.keys())
-    sorting_options = {0: 'Срок доставки, дней', 1: 'Цена, руб.'}
     pprint(get_analog_or_replacement_parts(search_result['analogs']))
