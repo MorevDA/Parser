@@ -25,22 +25,25 @@ def get_analog_or_replacement_parts(parts_dict: dict, sorting_option='Цена, 
     return analog
 
 
-def get_original_parts(parts_list: dict, sorting_option='Цена, руб.') -> list:
+def get_original_parts(parts_list: dict, sorting_option='Цена, руб.') -> dict:
     """ Функция для получения информации по запчасти в соответствии с запрошенным номером.
         Функция принимает на вход словарь с 'сырыми' данными полученными в результате скрейпинга сайта.
         Функция возвращает словарь с данными приведенными в удобный для пользователя формат.
         По умолчанию выполняется сортировка по цене, опционально возможно менять параметр сортировки при
         вызове функции."""
-    original = []
+    result = {}
+    detail_name = f"{parts_list[0]['make']} {parts_list[0]['detailNum']} {parts_list[0]['name']}"
+    result['detail_name'] = detail_name
+    offers = []
     for part in parts_list[0]['offers']:
         delivery = part['delivery']['value']
         price = part['displayPrice']['value']
         amount = part['quantity']
         part_info = {'Срок доставки, дней': delivery, 'Цена, руб.': price, 'Доступно для заказа': amount}
-        original.append(part_info)
-    original.sort(key=lambda x: x[sorting_option])
-    return original[:5]
-
+        offers.append(part_info)
+    offers.sort(key=lambda x: x[sorting_option])
+    result['offers'] = offers[:5]
+    return result
 
 if __name__ == "__main__":
     with open('emex_4475005002_1', 'r', encoding='utf-8') as file:
